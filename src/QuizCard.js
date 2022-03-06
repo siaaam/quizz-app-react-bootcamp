@@ -5,6 +5,8 @@ const QuizCard = ({
   selectAnswer,
   selectedAnswer,
   correctAnswer,
+  selectedQuestionIndex,
+  quizzes,
 }) => {
   //   console.log(selectedQuestion);
 
@@ -17,7 +19,10 @@ const QuizCard = ({
   //   console.log(question, answers);
 
   return (
-    <div>
+    <div className="question-card">
+      <p>
+        Question No. {selectedQuestionIndex + 1} / {quizzes.length}
+      </p>
       <h2>{question}</h2>
       {answers.map((ans, i) => (
         <AnswersCard

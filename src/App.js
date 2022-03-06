@@ -39,12 +39,13 @@ function App() {
     if (isLastQuestion) {
       setEndGame(true);
     } else {
-      setSelectedQuestionIndex((prevIndex) => prevIndex + 1);
+      const currentIndex = selectedQuestionIndex + 1;
+      setSelectedQuestionIndex(currentIndex);
       setSelectedQuestion({
-        question: quizzes[selectedQuestionIndex].question,
-        answers: shuffle(quizzes[selectedQuestionIndex]),
+        question: quizzes[currentIndex].question,
+        answers: shuffle(quizzes[currentIndex]),
       });
-      setCorrectAnswer(quizzes[selectedQuestionIndex].correct_answer);
+      setCorrectAnswer(quizzes[currentIndex].correct_answer);
       setSelectedAnswer(null);
     }
   };
@@ -56,27 +57,31 @@ function App() {
     setStartGame(false);
     setLoaded(false);
     setEndGame(false);
+    setGameScore(0);
   };
 
-  const selectAnswer = (selectedAnswer) => {
-    setSelectedAnswer(selectedAnswer);
+  const selectAnswer = (answer) => {
+    setSelectedAnswer(answer);
     // is correct ans selected?
 
     // score updater function
-    if (selectedAnswer === correctAnswer) {
+    if (answer === correctAnswer) {
       // upgrade score
       setGameScore((prevScore) => prevScore + 1);
     }
+    console.log(gameScore);
   };
 
   return (
-    <div>
+    <div className="container">
       {endGame && <GameOver gameScore={gameScore} resetQuiz={resetQuiz} />}
       {startGame && loaded && !endGame && (
         <QuizCard
           selectedAnswer={selectedAnswer}
           correctAnswer={correctAnswer}
           selectAnswer={selectAnswer}
+          quizzes={quizzes}
+          selectedQuestionIndex={selectedQuestionIndex}
           selectedQuestion={selectedQuestion}
           navigateNextQuiz={navigateNextQuiz}
         />
