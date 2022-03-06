@@ -11,6 +11,9 @@ function App() {
   const [startGame, setStartGame] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [endGame, setEndGame] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
+  const [gameScore, setGameScore] = useState(0);
 
   const startQuizCard = async () => {
     const res = await fetch(
@@ -25,6 +28,7 @@ function App() {
       question: results[0].question,
       answers: shuffle(results[0]),
     });
+    setCorrectAnswer(results[0].correct_answer);
     setLoaded(true);
   };
 
@@ -40,6 +44,8 @@ function App() {
         question: quizzes[selectedQuestionIndex].question,
         answers: shuffle(quizzes[selectedQuestionIndex]),
       });
+      setCorrectAnswer(quizzes[selectedQuestionIndex].correct_answer);
+      setSelectedAnswer(null);
     }
   };
 
@@ -52,11 +58,25 @@ function App() {
     setEndGame(false);
   };
 
+  const selectAnswer = (selectedAnswer) => {
+    setSelectedAnswer(selectedAnswer);
+    // is correct ans selected?
+
+    // score updater function
+    if (selectedAnswer === correctAnswer) {
+      // upgrade score
+      setGameScore((prevScore) => prevScore + 1);
+    }
+  };
+
   return (
     <div>
-      {endGame && <GameOver resetQuiz={resetQuiz} />}
+      {endGame && <GameOver gameScore={gameScore} resetQuiz={resetQuiz} />}
       {startGame && loaded && !endGame && (
         <QuizCard
+          selectedAnswer={selectedAnswer}
+          correctAnswer={correctAnswer}
+          selectAnswer={selectAnswer}
           selectedQuestion={selectedQuestion}
           navigateNextQuiz={navigateNextQuiz}
         />
